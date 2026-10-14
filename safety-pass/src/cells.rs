@@ -191,8 +191,8 @@ impl CellType {
             }
 
             // constants don't have a logic expression
-            CellType::VCC => panic!("VCC is a constant"),
-            CellType::GND => panic!("GND is a constant"),
+            CellType::VCC => format!("    assign {} = 1'b1;\n", self.get_output_ports()[0]),
+            CellType::GND => format!("    assign {} = 1'b0;\n", self.get_output_ports()[0]),
 
             CellType::FDRE => {
                 let p = self.get_input_ports(); // order is D, C, CE, R
