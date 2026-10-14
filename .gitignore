@@ -1,6 +1,5 @@
 /target
-generated.v
-output.v
+*.v
 
 tutorial/obj_dir/
 tutorial/obj_dir_swapped/

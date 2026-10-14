@@ -1,10 +1,9 @@
+use safety_net::assert_verilog_eq;
 use safety_pass::{Cell, CellType, VerilogEqn, logic_rule};
 
 #[test]
 fn check_and() {
     let result = logic_rule!(@expr CellType::AND2; 0 && 1);
-
-    println!("{}", result);
     assert_eq!(result, "A1 & A2");
 }
 
@@ -59,7 +58,12 @@ fn check_nested_parens() {
 fn check_and2_module() {
     let cell = Cell::new(CellType::AND2, None);
     let module = cell.get_verilog_module();
-    println!("{}", module);
-    assert!(module.contains("module AND2("));
-    assert!(module.contains("assign"));
+    let src = "module AND2 (
+                         input A1,
+                         input A2,
+                         output ZN
+                     );
+                       assign ZN = A1 & A2;
+                     endmodule";
+    assert_verilog_eq!(module, src);
 }

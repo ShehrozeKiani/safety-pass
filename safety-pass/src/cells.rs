@@ -461,7 +461,7 @@ pub trait VerilogEqn: Instantiable {
 
         output.push_str("module ");
         output.push_str(&self.get_name().to_string());
-        output.push_str("(\n");
+        output.push_str(" (\n");
 
         let mut i = 0;
         while i < input_ports.len() {
