@@ -493,7 +493,7 @@ pub trait VerilogEqn: Instantiable {
                 }
             }
             output.push('\n');
-            output.push_str(")");
+            output.push(')');
         }
 
         output.push_str(" (\n");
