@@ -1,3 +1,9 @@
 /target
 generated.v
 output.v
+
+tutorial/obj_dir/
+tutorial/obj_dir_swapped/
+tutorial/rca.png
+tutorial/rca_swapped.png
+tutorial/rca_swapped.v
