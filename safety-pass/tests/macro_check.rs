@@ -67,3 +67,19 @@ fn check_and2_module() {
                      endmodule";
     assert_verilog_eq!(module, src);
 }
+
+#[test]
+fn check_lut2_module() {
+    let cell = Cell::new(CellType::LUT2, None);
+    let module = cell.get_verilog_module();
+    let src = "module LUT2 #(
+                         parameter INIT = 4'h0
+                     ) (
+                         input I1,
+                         input I0,
+                         output O
+                     );
+                       assign O = INIT[{I1, I0}];
+                     endmodule";
+    assert_verilog_eq!(module, src);
+}

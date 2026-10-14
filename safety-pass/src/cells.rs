@@ -237,6 +237,20 @@ impl CellType {
         }
     }
 
+    /// Returns the default parameter values for a cell
+    pub fn get_default_parameters(&self) -> Vec<(Identifier, Parameter)> {
+        match self {
+            Self::LUT1 => vec![("INIT".into(), Parameter::bitvec(2, 0))],
+            Self::LUT2 => vec![("INIT".into(), Parameter::bitvec(4, 0))],
+            Self::LUT3 => vec![("INIT".into(), Parameter::bitvec(8, 0))],
+            Self::LUT4 => vec![("INIT".into(), Parameter::bitvec(16, 0))],
+            Self::LUT5 => vec![("INIT".into(), Parameter::bitvec(32, 0))],
+            Self::LUT6 => vec![("INIT".into(), Parameter::bitvec(64, 0))],
+            Self::FDRE => vec![("INIT".into(), Parameter::bitvec(1, 0))],
+            _ => vec![],
+        }
+    }
+
     /// Return the number of inputs
     pub fn get_num_inputs(&self) -> usize {
         match self {
@@ -451,6 +465,9 @@ pub trait VerilogEqn: Instantiable {
     /// Returns the Verilog body expression for a given Cell's logic
     fn get_verilog_body(&self) -> String;
 
+    /// Returns the default parameter values
+    fn get_default_parameters(&self) -> Vec<(Identifier, Parameter)>;
+
     /// Builds the full module definition for a given Cell
     fn get_verilog_module(&self) -> String {
         let mut output = String::new();
@@ -461,6 +478,24 @@ pub trait VerilogEqn: Instantiable {
 
         output.push_str("module ");
         output.push_str(&self.get_name().to_string());
+
+        let params = self.get_default_parameters();
+        if !params.is_empty() {
+            output.push_str(" #(\n");
+            let l = params.len();
+            for (i, (k, v)) in params.into_iter().enumerate() {
+                output.push_str("  parameter ");
+                output.push_str(&k.to_string());
+                output.push_str(" = ");
+                output.push_str(&v.to_string());
+                if i != l - 1 {
+                    output.push_str(",\n");
+                }
+            }
+            output.push('\n');
+            output.push_str(")");
+        }
+
         output.push_str(" (\n");
 
         let mut i = 0;
@@ -489,6 +524,10 @@ pub trait VerilogEqn: Instantiable {
 impl VerilogEqn for Cell {
     fn get_verilog_body(&self) -> String {
         self.get_type().get_verilog_body()
+    }
+
+    fn get_default_parameters(&self) -> Vec<(Identifier, Parameter)> {
+        self.get_type().get_default_parameters()
     }
 }
 
